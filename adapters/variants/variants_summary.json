@@ -1,0 +1,45 @@
+{
+  "dpo": {
+    "eval_reward_accuracy": 0.7,
+    "eval_chosen_reward": 0.07790204375778557,
+    "eval_rejected_reward": 0.05154856429609936,
+    "eval_reward_gap": 0.02635347946663387,
+    "mean_output_chars": 352.55,
+    "delta_chars_vs_sft": 2.0500000000000114,
+    "diagnosis": "INTENDED"
+  },
+  "rpo": {
+    "eval_reward_accuracy": 0.67,
+    "eval_chosen_reward": 0.5186002059280872,
+    "eval_rejected_reward": 0.4844709511101246,
+    "eval_reward_gap": 0.03412925481796265,
+    "mean_output_chars": 347.8,
+    "delta_chars_vs_sft": -2.6999999999999886,
+    "diagnosis": "INTENDED"
+  },
+  "dpo_norm": {
+    "eval_reward_accuracy": 0.68,
+    "eval_chosen_reward": -0.18345470305532216,
+    "eval_rejected_reward": -0.1960072373598814,
+    "eval_reward_gap": 0.012552534304559231,
+    "mean_output_chars": 350.9,
+    "delta_chars_vs_sft": 0.39999999999997726,
+    "diagnosis": "LIKELIHOOD DISPLACEMENT"
+  },
+  "ld_dpo": {
+    "eval_reward_accuracy": 0.58,
+    "eval_chosen_reward": -0.12408748444635422,
+    "eval_rejected_reward": -0.15429176926845684,
+    "eval_reward_gap": 0.030204284880310298,
+    "mean_output_chars": 350.4,
+    "delta_chars_vs_sft": -0.10000000000002274,
+    "diagnosis": "LIKELIHOOD DISPLACEMENT"
+  },
+  "orpo": {
+    "start": "/kaggle/working/lab22-v2/models/sft-merged",
+    "eval_reward_accuracy": 0.6600000262260437,
+    "eval_log_odds_ratio": -0.624285876750946,
+    "mean_output_chars": 342.3,
+    "delta_chars_vs_sft": -8.199999999999989
+  }
+}

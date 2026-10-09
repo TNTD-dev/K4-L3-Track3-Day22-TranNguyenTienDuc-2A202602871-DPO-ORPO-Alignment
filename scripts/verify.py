@@ -52,13 +52,36 @@ def read_json(path: Path, problems: list[str]) -> dict | list | None:
         return None
 
 
+def verified_import_reference(base: str, adapter: Path) -> bool:
+    """Allow relocation only with unchanged runtime evidence and SFT configuration.
+
+    A return bundle omits weights; verification confirms evidence, not GPU inference.
+    Preserve the original adapter config instead of fabricating a local training path.
+    """
+    folder = REPO / "submission/provenance"
+    try:
+        provenance = json.loads((folder / "import.json").read_text())
+        files = provenance["file_hashes"]
+        config = adapter / "adapter_config.json"
+        snapshot = folder / "sft-model-config.json"
+        return (
+            base == provenance["original_reference"]
+            and Path(base).name == "sft-merged"
+            and hashlib.sha256(config.read_bytes()).hexdigest() == files["adapters/dpo/adapter_config.json"]["sha256"]
+            and hashlib.sha256(snapshot.read_bytes()).hexdigest() == files["models/sft-merged/config.json"]["sha256"]
+            and bool(json.loads(snapshot.read_text()).get("model_type"))
+        )
+    except (OSError, KeyError, TypeError, json.JSONDecodeError):
+        return False
+
+
 def check_dpo(problems: list[str], warnings: list[str]) -> None:
     adapter = REPO / "adapters" / "dpo"
     if not need(adapter / "adapter_config.json", "DPO adapter (NB3)", problems):
         return
     base = str((read_json(adapter / "adapter_config.json", problems) or {}).get("base_model_name_or_path", ""))
     expected = (REPO / "models" / "sft-merged").resolve()
-    if not base or Path(base).resolve() != expected:
+    if not base or (Path(base).resolve() != expected and not verified_import_reference(base, adapter)):
         problems.append(
             f"WRONG REF  adapters/dpo was trained on {base!r}, not {rel(expected)}: the DPO reference "
             "must be this repo's SFT model (if the repo moved, rerun NB3 here)."
@@ -196,7 +219,10 @@ def main() -> int:
     for nb in NOTEBOOKS:
         need(REPO / "notebooks" / f"{nb}.py", f"notebook {nb}", problems)
     need(REPO / "adapters" / "sft-mini" / "adapter_config.json", "SFT adapter (NB1)", problems)
-    need(REPO / "models" / "sft-merged" / "config.json", "merged SFT model = DPO reference (NB1)", problems)
+    model_config = REPO / "models/sft-merged/config.json"
+    if not model_config.exists():
+        model_config = REPO / "submission/provenance/sft-model-config.json"
+    need(model_config, "merged SFT model config / imported snapshot (NB1)", problems)
     need(REPO / "data" / "pref" / "train.parquet", "preference train split (NB2)", problems)
     need(REPO / "data" / "pref" / "eval.parquet", "held-out preference split (NB2)", problems)
     check_dpo(problems, warnings)

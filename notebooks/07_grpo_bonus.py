@@ -95,14 +95,17 @@ assert correctness_reward([[{"content": "Đáp số: 7"}]], ["8"]) == [0.0]
 # ## 2. Độ chính xác trước khi huấn luyện
 
 # %%
-def accuracy(model, tokenizer) -> float:
+def accuracy(model, tokenizer):
     prompts = [r["prompt"][0]["content"] for r in test_ds]
     outs = MD.generate(model, tokenizer, prompts, max_new_tokens=320)
-    return sum(MR.is_correct(MR.extract_answer(o), r["answer"]) for o, r in zip(outs, test_ds)) / len(test_ds)
+    rows = [{"prompt": p, "answer": r["answer"], "output": o,
+             "correct": MR.is_correct(MR.extract_answer(o), r["answer"])}
+            for p, o, r in zip(prompts, outs, test_ds)]
+    return sum(r["correct"] for r in rows) / len(rows), rows
 
 
 model, tokenizer = MD.load_model(C.SFT_MERGED)
-acc_before = accuracy(model, tokenizer)
+acc_before, predictions_before = accuracy(model, tokenizer)
 print(f"test[{len(test_ds)}] accuracy before GRPO: {acc_before:.3f}")
 model = MD.add_lora(model)
 
@@ -164,13 +167,18 @@ ax.grid(True, alpha=0.3)
 fig.savefig(C.SCREENSHOTS / "08-grpo-reward.png", dpi=120, bbox_inches="tight")
 plt.show()
 
-acc_after = accuracy(trainer.model, tokenizer)
+acc_after, predictions_after = accuracy(trainer.model, tokenizer)
 trainer.model.save_pretrained(str(C.GRPO_ADAPTER))
+tokenizer.save_pretrained(str(C.GRPO_ADAPTER))
 result = {
     "dataset": C.GRPO_DATASET, "n_test": len(test_ds), "steps": MAX_STEPS,
     "num_generations": G, "acc_before": acc_before, "acc_after": acc_after,
 }
 (C.GRPO_ADAPTER / "grpo_metrics.json").write_text(json.dumps(result, indent=2))
+(C.EVAL_DIR / "grpo_predictions.json").write_text(
+    json.dumps({"before": predictions_before, "after": predictions_after}, ensure_ascii=False, indent=2)
+)
+(C.EVAL_DIR / "grpo_history.json").write_text(json.dumps(trainer.state.log_history, indent=2, default=str))
 print(result)
 
 # %% [markdown]

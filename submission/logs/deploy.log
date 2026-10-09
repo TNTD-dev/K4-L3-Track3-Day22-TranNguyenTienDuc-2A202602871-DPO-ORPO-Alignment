@@ -1,0 +1,36 @@
+START deploy
+Collecting llama-cpp-python<1.0,>=0.3.16
+  Downloading llama_cpp_python-0.3.36.tar.gz (76.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 76.6/76.6 MB 67.6 MB/s  0:00:01
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: typing-extensions>=4.5.0 in /tmp/lab22-kaggle-venv-v2/lib/python3.13/site-packages (from llama-cpp-python<1.0,>=0.3.16) (4.16.0)
+Requirement already satisfied: numpy>=1.20.0 in /tmp/lab22-kaggle-venv-v2/lib/python3.13/site-packages (from llama-cpp-python<1.0,>=0.3.16) (2.5.3)
+Collecting diskcache>=5.6.1 (from llama-cpp-python<1.0,>=0.3.16)
+  Downloading diskcache-5.6.3-py3-none-any.whl.metadata (20 kB)
+Requirement already satisfied: jinja2>=2.11.3 in /tmp/lab22-kaggle-venv-v2/lib/python3.13/site-packages (from llama-cpp-python<1.0,>=0.3.16) (3.1.6)
+Requirement already satisfied: MarkupSafe>=2.0 in /tmp/lab22-kaggle-venv-v2/lib/python3.13/site-packages (from jinja2>=2.11.3->llama-cpp-python<1.0,>=0.3.16) (3.0.4)
+Downloading diskcache-5.6.3-py3-none-any.whl (45 kB)
+Building wheels for collected packages: llama-cpp-python
+  Building wheel for llama-cpp-python (pyproject.toml): started
+  error: subprocess-exited-with-error
+  
+  × Building wheel for llama-cpp-python (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> No available output.
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  Building wheel for llama-cpp-python (pyproject.toml): finished with status 'error'
+  ERROR: Failed building wheel for llama-cpp-python
+Failed to build llama-cpp-python
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> llama-cpp-python
+
+FAILED deploy: Command failed (1); see submission/logs/llama-install.log
+RESULTS: /kaggle/working/LAB22_RESULTS.zip (18.3 MB)

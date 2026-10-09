@@ -1,0 +1,9 @@
+START dpo
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+dpo: cell 2/12
+dpo: cell 4/12
+dpo: cell 6/12
+dpo: cell 8/12
+dpo: cell 9/12
+dpo: cell 11/12
+RESULTS: /kaggle/working/LAB22_RESULTS.zip (6.0 MB)

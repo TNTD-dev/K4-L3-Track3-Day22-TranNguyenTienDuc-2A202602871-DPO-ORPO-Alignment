@@ -1,0 +1,8 @@
+START grpo
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+grpo: cell 2/11
+grpo: cell 4/11
+grpo: cell 6/11
+grpo: cell 8/11
+grpo: cell 10/11
+RESULTS: /kaggle/working/LAB22_RESULTS.zip (20.9 MB)

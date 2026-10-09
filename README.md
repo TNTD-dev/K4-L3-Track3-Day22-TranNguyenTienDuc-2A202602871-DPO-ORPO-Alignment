@@ -1,5 +1,39 @@
 # Ngày 22 — Lab căn chỉnh mô hình bằng DPO/ORPO (Track 3)
 
+## Bài nộp — Trần Nguyễn Tiến Đức · 2A202602871
+
+Thực nghiệm Kaggle T4, kết quả tổng hợp ngày **09/10/2026**. Phần chính NB0–NB4 đã chạy,
+giữ đầy đủ output tại [`notebooks/`](notebooks/). Đọc
+[`submission/REFLECTION.md`](submission/REFLECTION.md) để xem cấu hình, phân tích, ví dụ
+và các giới hạn; [`submission/analysis.json`](submission/analysis.json) chứa số liệu tái tính.
+
+| Kết quả chính | Số liệu |
+|---|---|
+| Preference split | 800 train / 100 eval, không trùng prompt |
+| Held-out preference accuracy / margin DPO | 73% / +0,083169 |
+| RM held-out win rate SFT+DPO | 50,625%, CI 95% [44,375%;56,25%] — chưa phát hiện cải thiện rõ |
+| API held-out win rate | 50%, CI 95% [45,625%;54,375%] |
+| RM/API agreement | 82,955% trên 88 cặp cùng đầu ra |
+| GRPO test accuracy | 49% → 50%; paired CI của Δ [−5;+7] điểm phần trăm |
+| Bonus có bằng chứng | NB3b, GRPO, β-sweep, chấm chéo, HF Hub: +29 danh nghĩa, trần rubric +20 |
+| Chưa hoàn thành | GGUF và benchmark bị lỗi môi trường; không khai báo đã có kết quả |
+
+Mô hình đã public: [adapter DPO](https://huggingface.co/duckak12/lab22-dpo-vn-experimental)
+và [SFT reference](https://huggingface.co/duckak12/lab22-dpo-vn-experimental-sft-reference).
+Không commit trọng số lớn hoặc API key. SHA của ZIP và từng bằng chứng lưu ở
+[`submission/provenance/`](submission/provenance/).
+
+Kiểm tra bài nộp **không cần GPU**: `python3 scripts/verify.py` hoặc `make verify PY=python3`.
+Config adapter giữ nguyên đường Kaggle gốc; verifier chỉ chấp nhận đường đã di chuyển nếu
+hash config và snapshot SFT khớp provenance. Kiểm tra này xác nhận bằng chứng, không thay
+cho kiểm tra inference với trọng số. Tái tính phân tích bằng `python scripts/analyze_results.py`
+trong môi trường có pyarrow/matplotlib. Chạy lại training cần CUDA và môi trường theo hướng dẫn dưới.
+
+Bài làm có hỗ trợ Codex trong chuẩn bị mã và phân tích dựa trên kết quả thật; không dùng
+lời giải mẫu. Không cam kết số điểm cuối cùng từ người chấm.
+
+---
+
 Lab cho học phần **AICB-P2T3 · Ngày 22 · DPO/ORPO Alignment — từ SFT đến học theo sở thích**.
 
 > Bản K4 cập nhật tháng 10/2026 (xem [`CHANGELOG.md`](CHANGELOG.md)). Mọi thời gian trong tài liệu này là
@@ -39,6 +73,11 @@ Việt để huấn luyện và 100 cặp để kiểm tra.
 ---
 
 ## 1. Chuẩn bị (Colab, không cần cài gì)
+
+**Chạy trên Kaggle:** upload [`kaggle/Lab22_Kaggle_All.ipynb`](kaggle/Lab22_Kaggle_All.ipynb).
+Notebook tự chứa nguồn, chạy phần chính và các bonus có điểm, xuất ZIP kết quả sau mỗi stage.
+Hướng dẫn và cấu hình Secrets: [`kaggle/README.md`](kaggle/README.md).
+Chạy `make kaggle` để sinh lại file từ mã nguồn; chưa kiểm chứng end-to-end trên GPU Kaggle.
 
 1. Tải file [`colab/Lab22_DPO_T4.ipynb`](colab/Lab22_DPO_T4.ipynb) về máy, rồi mở [Google Colab](https://colab.research.google.com)
    → **Tệp → Tải sổ tay lên** → chọn file vừa tải.

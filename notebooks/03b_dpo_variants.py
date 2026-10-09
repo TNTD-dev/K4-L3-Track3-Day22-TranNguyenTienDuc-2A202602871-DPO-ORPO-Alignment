@@ -35,6 +35,7 @@ import unsloth  # noqa: F401
 import torch
 
 from lab22 import config as C
+from lab22 import data as D
 from lab22 import modeling as MD
 
 assert torch.cuda.is_available()
@@ -48,6 +49,8 @@ assert len(train_ds) > 0, "Empty preference train split: rerun NB2"
 eval_ds = Dataset.from_parquet(str(C.PREF_DIR / "eval.parquet"))
 probe_prompts = [r["prompt"][0]["content"] for r in eval_ds.select(range(min(20, len(eval_ds))))]
 print(f"variant train={len(train_ds)} eval={len(eval_ds)} probe prompts={len(probe_prompts)}")
+C.ensure_dirs()
+C.VARIANTS_DIR.mkdir(parents=True, exist_ok=True)
 
 RUNS = {
     "dpo": {"loss_type": ["sigmoid"]},
@@ -66,6 +69,12 @@ import json
 from trl import DPOTrainer
 
 results = {}
+probe_outputs = {}
+model, tokenizer = MD.load_model(C.SFT_MERGED)
+baseline_outputs = MD.generate(model, tokenizer, probe_prompts, max_new_tokens=256)
+baseline_chars = sum(map(len, baseline_outputs)) / len(baseline_outputs)
+del model
+MD.cleanup()
 for name in [r for r in SELECTED if r in RUNS]:
     print(f"\n=== {name} ===")
     model, tokenizer = MD.load_model(C.SFT_MERGED)
@@ -86,10 +95,15 @@ for name in [r for r in SELECTED if r in RUNS]:
         "eval_reward_accuracy": ev.get("eval_rewards/accuracies"),
         "eval_chosen_reward": ev.get("eval_rewards/chosen"),
         "eval_rejected_reward": ev.get("eval_rewards/rejected"),
+        "eval_reward_gap": ev.get("eval_rewards/margins"),
         "mean_output_chars": sum(map(len, outputs)) / len(outputs),
+        "delta_chars_vs_sft": sum(map(len, outputs)) / len(outputs) - baseline_chars,
         "diagnosis": MD.diagnose(MD.reward_history(trainer.state.log_history))[0],
     }
     trainer.model.save_pretrained(str(C.VARIANTS_DIR / name))
+    tokenizer.save_pretrained(str(C.VARIANTS_DIR / name))
+    D.save_split_fingerprint(C.PREF_DIR, C.VARIANTS_DIR / name)
+    probe_outputs[name] = outputs
     print(results[name])
     del trainer, model
     MD.cleanup()
@@ -133,8 +147,12 @@ if "orpo" in SELECTED:
         "eval_reward_accuracy": ev.get("eval_rewards/accuracies"),
         "eval_log_odds_ratio": ev.get("eval_log_odds_ratio"),
         "mean_output_chars": sum(map(len, outputs)) / len(outputs),
+        "delta_chars_vs_sft": sum(map(len, outputs)) / len(outputs) - baseline_chars,
     }
     trainer.model.save_pretrained(str(C.VARIANTS_DIR / "orpo"))
+    tokenizer.save_pretrained(str(C.VARIANTS_DIR / "orpo"))
+    D.save_split_fingerprint(C.PREF_DIR, C.VARIANTS_DIR / "orpo")
+    probe_outputs["orpo"] = outputs
     print(results["orpo"])
     del trainer, model
     MD.cleanup()
@@ -149,6 +167,10 @@ import pandas as pd
 table = pd.DataFrame(results).T
 print(table.to_string())
 (C.VARIANTS_DIR / "variants_summary.json").write_text(json.dumps(results, indent=2, default=str))
+(C.EVAL_DIR / "variant_probes.json").write_text(
+    json.dumps({"prompts": probe_prompts, "sft": baseline_outputs, "outputs": probe_outputs,
+                "sft_mean_chars": baseline_chars, "max_new_tokens": 256}, ensure_ascii=False, indent=2)
+)
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 3.8))
 table["eval_reward_accuracy"].astype(float).plot.bar(ax=axes[0], color="#2e548a")

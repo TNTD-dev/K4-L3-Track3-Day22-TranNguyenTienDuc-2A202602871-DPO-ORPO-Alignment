@@ -1,0 +1,7 @@
+START variants
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+variants: cell 2/9
+variants: cell 4/9
+variants: cell 6/9
+variants: cell 8/9
+RESULTS: /kaggle/working/LAB22_RESULTS.zip (18.3 MB)

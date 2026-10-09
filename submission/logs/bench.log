@@ -1,0 +1,80 @@
+START bench
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+bench: cell 2/10
+bench: cell 4/10
+bench: cell 6/10
+FAILED bench: An error occurred while executing the following cell:
+------------------
+rows = []
+for name, (task, shots, limit, metric) in BENCHMARKS.items():
+    row = {"benchmark": name, "task": task, "limit_per_subtask": limit}
+    for label in ("sft", "dpo"):
+        value, err = score(run_lm_eval(label, task, shots, limit), task, metric)
+        row[label], row[f"{label}_stderr"] = value, err
+    row["delta"] = row["dpo"] - row["sft"]
+    rows.append(row)
+    print(row)
+------------------
+
+----- stdout -----
+
+>>> sft · ifeval
+lm_eval --model hf --model_args pretrained=/kaggle/working/lab22-v2/models/sft-merged,dtype=bfloat16,enable_thinking=False --tasks ifeval --num_fewshot 0 --apply_chat_template --batch_size 1 --device cuda:0 --seed 42 --output_path /kaggle/working/lab22-v2/data/eval/lm_eval/sft-ifeval --limit 200
+------------------
+
+[31m---------------------------------------------------------------------------[39m
+[31mFileNotFoundError[39m                         Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[3][39m[32m, line 5[39m
+[32m      1[39m rows = []
+[32m      2[39m [38;5;28;01mfor[39;00m name, (task, shots, limit, metric) [38;5;28;01min[39;00m BENCHMARKS.items():
+[32m      3[39m     row = {[33m"benchmark"[39m: name, [33m"task"[39m: task, [33m"limit_per_subtask"[39m: limit}
+[32m      4[39m     [38;5;28;01mfor[39;00m label [38;5;28;01min[39;00m ([33m"sft"[39m, [33m"dpo"[39m):
+[32m----> [39m[32m5[39m         value, err = score(run_lm_eval(label, task, shots, limit), task, metric)
+[32m      6[39m         row[label], row[f"{label}_stderr"] = value, err
+[32m      7[39m     row[[33m"delta"[39m] = row[[33m"dpo"[39m] - row[[33m"sft"[39m]
+[32m      8[39m     rows.append(row)
+
+[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 17[39m, in [36mrun_lm_eval[39m[34m(label, task, shots, limit)[39m
+[32m     13[39m         cmd.append([33m"--fewshot_as_multiturn"[39m)
+[32m     14[39m     [38;5;28;01mif[39;00m limit:
+[32m     15[39m         cmd += [[33m"--limit"[39m, str(limit)]
+[32m     16[39m     print(f"\n>>> {label} · {task}\n{[33m' '[39m.join(cmd)}")
+[32m---> [39m[32m17[39m     proc = subprocess.run(cmd, capture_output=[38;5;28;01mTrue[39;00m, text=[38;5;28;01mTrue[39;00m)
+[32m     18[39m     files = sorted(out_dir.glob([33m"**/results*.json"[39m), key=[38;5;28;01mlambda[39;00m p: p.stat().st_mtime)
+[32m     19[39m     [38;5;28;01mif[39;00m proc.returncode != [32m0[39m [38;5;28;01mor[39;00m [38;5;28;01mnot[39;00m files:
+[32m     20[39m         print(proc.stderr[-[32m2000[39m:])
+
+[36mFile [39m[32m/usr/lib/python3.13/subprocess.py:554[39m, in [36mrun[39m[34m(input, capture_output, timeout, check, *popenargs, **kwargs)[39m
+[32m    551[39m     kwargs[[33m'[39m[33mstdout[39m[33m'[39m] = PIPE
+[32m    552[39m     kwargs[[33m'[39m[33mstderr[39m[33m'[39m] = PIPE
+[32m--> [39m[32m554[39m [38;5;28;01mwith[39;00m [30;43mPopen[39;49m[30;43m([39;49m[30;43m*[39;49m[30;43mpopenargs[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43m*[39;49m[30;43m*[39;49m[30;43mkwargs[39;49m[30;43m)[39;49m [38;5;28;01mas[39;00m process:
+[32m    555[39m     [38;5;28;01mtry[39;00m:
+[32m    556[39m         stdout, stderr = process.communicate([38;5;28minput[39m, timeout=timeout)
+
+[36mFile [39m[32m/usr/lib/python3.13/subprocess.py:1039[39m, in [36mPopen.__init__[39m[34m(self, args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, user, group, extra_groups, encoding, errors, text, umask, pipesize, process_group)[39m
+[32m   1035[39m         [38;5;28;01mif[39;00m [38;5;28mself[39m.text_mode:
+[32m   1036[39m             [38;5;28mself[39m.stderr = io.TextIOWrapper([38;5;28mself[39m.stderr,
+[32m   1037[39m                     encoding=encoding, errors=errors)
+[32m-> [39m[32m1039[39m     [30;43mself[39;49m[30;43m.[39;49m[30;43m_execute_child[39;49m[30;43m([39;49m[30;43margs[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mexecutable[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mpreexec_fn[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mclose_fds[39;49m[30;43m,[39;49m
+[32m   1040[39m [30;43m                        [39;49m[30;43mpass_fds[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mcwd[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43menv[39;49m[30;43m,[39;49m
+[32m   1041[39m [30;43m                        [39;49m[30;43mstartupinfo[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mcreationflags[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mshell[39;49m[30;43m,[39;49m
+[32m   1042[39m [30;43m                        [39;49m[30;43mp2cread[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mp2cwrite[39;49m[30;43m,[39;49m
+[32m   1043[39m [30;43m                        [39;49m[30;43mc2pread[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mc2pwrite[39;49m[30;43m,[39;49m
+[32m   1044[39m [30;43m                        [39;49m[30;43merrread[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43merrwrite[39;49m[30;43m,[39;49m
+[32m   1045[39m [30;43m                        [39;49m[30;43mrestore_signals[39;49m[30;43m,[39;49m
+[32m   1046[39m [30;43m                        [39;49m[30;43mgid[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mgids[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43muid[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mumask[39;49m[30;43m,[39;49m
+[32m   1047[39m [30;43m                        [39;49m[30;43mstart_new_session[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mprocess_group[39;49m[30;43m)[39;49m
+[32m   1048[39m [38;5;28;01mexcept[39;00m:
+[32m   1049[39m     [38;5;66;03m# Cleanup if the child failed starting.[39;00m
+[32m   1050[39m     [38;5;28;01mfor[39;00m f [38;5;129;01min[39;00m [38;5;28mfilter[39m([38;5;28;01mNone[39;00m, ([38;5;28mself[39m.stdin, [38;5;28mself[39m.stdout, [38;5;28mself[39m.stderr)):
+
+[36mFile [39m[32m/usr/lib/python3.13/subprocess.py:1991[39m, in [36mPopen._execute_child[39m[34m(self, args, executable, preexec_fn, close_fds, pass_fds, cwd, env, startupinfo, creationflags, shell, p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite, restore_signals, gid, gids, uid, umask, start_new_session, process_group)[39m
+[32m   1989[39m     err_msg = os.strerror(errno_num)
+[32m   1990[39m [38;5;28;01mif[39;00m err_filename [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[32m-> [39m[32m1991[39m     [38;5;28;01mraise[39;00m child_exception_type(errno_num, err_msg, err_filename)
+[32m   1992[39m [38;5;28;01melse[39;00m:
+[32m   1993[39m     [38;5;28;01mraise[39;00m child_exception_type(errno_num, err_msg)
+
+[31mFileNotFoundError[39m: [Errno 2] No such file or directory: 'lm_eval'
+
+RESULTS: /kaggle/working/LAB22_RESULTS.zip (18.3 MB)

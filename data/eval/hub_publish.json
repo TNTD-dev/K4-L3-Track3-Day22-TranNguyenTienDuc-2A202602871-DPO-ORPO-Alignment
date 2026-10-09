@@ -1,0 +1,4 @@
+{
+  "adapter_url": "https://huggingface.co/duckak12/lab22-dpo-vn-experimental",
+  "reference_url": "https://huggingface.co/duckak12/lab22-dpo-vn-experimental-sft-reference"
+}

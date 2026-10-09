@@ -1,0 +1,113 @@
+{
+  "stages": {
+    "nb0": {
+      "status": "complete",
+      "signature": "43f8a861a7f2ad62c8527b4cc1574be472bacd187a5f20ef531ff3d55030b76a",
+      "seconds": 5.342571496963501,
+      "artifacts": {
+        "notebooks/00_dpo_loss_from_scratch.ipynb": "f3c16d01c8faa0e11530615a196b86a7b2ed7a57d139062779b5b4fd6fc86395"
+      }
+    },
+    "sft": {
+      "status": "complete",
+      "signature": "5a7b83e82ed48f82169247fa4c32c3101eedfd035d1d0eab96247fe3e5d2e627",
+      "seconds": 834.5510811805725,
+      "artifacts": {
+        "models/sft-merged/config.json": "93805895bae1690606f33d211ec52fa19bbcc4b9dab4cb348518bea4fcccb1f1",
+        "adapters/sft-mini/adapter_config.json": "e155c1b67aa9396df9c1a1ba00776abc405adf102040f7270cf2c101ea7e2209",
+        "notebooks/01_sft_mini.ipynb": "1fc167b0e7493c9d890c12fcfdb99c4147366b83566fec0465bf76795a5e6938"
+      }
+    },
+    "data": {
+      "status": "complete",
+      "signature": "888b307872afc2f524d4af255c5ae9f20031ef1c51116c7a45ace8f71c9ecb1c",
+      "seconds": 33.03380012512207,
+      "artifacts": {
+        "data/pref/train.parquet": "7ae95172dc55471194568ac353fc6d69ae9b2c14db70166f680f1a360f2d227b",
+        "data/pref/eval.parquet": "f63853289b01c4b396109312cb7a1e95b5bfe5409c14f2f113f76b6875c623de",
+        "data/pref/stats.json": "e142ae8ae767942370a4df84d19d357551fac8412473593086b09992ce24ab27",
+        "notebooks/02_preference_data.ipynb": "b9cff3b4f516e832cbb8fb9a210cbdfa2376b5e5b99d810d0a5b1c7ddefcef96"
+      }
+    },
+    "dpo": {
+      "status": "complete",
+      "signature": "1afade0f92a042e8e1659cccad0ce7bdfcc5e26604926167dcf225f93adcbe6e",
+      "seconds": 2022.1047666072845,
+      "artifacts": {
+        "adapters/dpo/adapter_config.json": "0c98439fc21c0d54f8399f60390ae10d4a94588c9b5d48bbe479527e4dca902d",
+        "adapters/dpo/dpo_metrics.json": "40ab63c30768a751b0bc7d4b41456d411211e871010e32004a4beb828a30833e",
+        "adapters/dpo/split.json": "e2f6c3e0274793bae3b6b1d1ecfdbd0c608569a7646002d36fedd981c8873454",
+        "notebooks/03_dpo_train.ipynb": "941d593802b9882ac2e89319109b04437e7fb70646af83ade1acabba5bd2f2bd"
+      }
+    },
+    "eval": {
+      "status": "complete",
+      "signature": "30992463c6b024db17877e0f05e627448e90a6cb61081eade2ebc6517870cd4e",
+      "seconds": 2111.1787209510803,
+      "artifacts": {
+        "data/eval/side_by_side.jsonl": "9fc52976c5dc102c160b8c21662ad7584dd5cfedd38e4c45180a9ae2e56ab58c",
+        "data/eval/judge_results_rm.json": "84cbd59d96c9a98234da8119e25b2841025875eb53e106fad6ef777f355159b4",
+        "notebooks/04_compare_and_eval.ipynb": "0c18c481d14ac68e79fdc85a9c34796a3770fc0db8edfefe44363ecb466958f6"
+      }
+    },
+    "variants": {
+      "status": "complete",
+      "signature": "96e7688a29985ef91c674ac44ed1478f0117ec008a32b7e7bfc4a4e083f112c4",
+      "seconds": 4649.573763132095,
+      "artifacts": {
+        "adapters/variants/variants_summary.json": "ae7ed1fed54e6b833d058cf554fc8dc613ef9191a8283ceb7a901df06c99bd0b",
+        "data/eval/variant_probes.json": "6d855a661c453e3a7a40f6b78ff8632b694eb8949fd31cac727403756a228296",
+        "notebooks/03b_dpo_variants.ipynb": "19a0ae6a24999084d9d2fe5a97bb8c5a7b54797a0b69cbc06ef213bd65cfee95"
+      }
+    },
+    "deploy": {
+      "status": "failed",
+      "signature": "1d62c12547fcda5d1ad8edd19dd6e02259ae0a4cf073b5dd8c7bc9876881a17e",
+      "error": "RuntimeError: Command failed (1); see submission/logs/llama-install.log",
+      "seconds": 22.82662796974182
+    },
+    "bench": {
+      "status": "failed",
+      "signature": "33fe07bf9b40fe0e39750b241704402771eea9ec1f83bd20df0150cd1c2b64e3",
+      "error": "\u001b[39m)\n\u001b[32m     14\u001b[39m     \u001b[38;5;28;01mif\u001b[39;00m limit:\n\u001b[32m     15\u001b[39m         cmd += [\u001b[33m\"--limit\"\u001b[39m, str(limit)]\n\u001b[32m     16\u001b[39m     print(f\"\\n>>> {label} · {task}\\n{\u001b[33m' '\u001b[39m.join(cmd)}\")\n\u001b[32m---> \u001b[39m\u001b[32m17\u001b[39m     proc = subprocess.run(cmd, capture_output=\u001b[38;5;28;01mTrue\u001b[39;00m, text=\u001b[38;5;28;01mTrue\u001b[39;00m)\n\u001b[32m     18\u001b[39m     files = sorted(out_dir.glob(\u001b[33m\"**/results*.json\"\u001b[39m), key=\u001b[38;5;28;01mlambda\u001b[39;00m p: p.stat().st_mtime)\n\u001b[32m     19\u001b[39m     \u001b[38;5;28;01mif\u001b[39;00m proc.returncode != \u001b[32m0\u001b[39m \u001b[38;5;28;01mor\u001b[39;00m \u001b[38;5;28;01mnot\u001b[39;00m files:\n\u001b[32m     20\u001b[39m         print(proc.stderr[-\u001b[32m2000\u001b[39m:])\n\n\u001b[36mFile \u001b[39m\u001b[32m/usr/lib/python3.13/subprocess.py:554\u001b[39m, in \u001b[36mrun\u001b[39m\u001b[34m(input, capture_output, timeout, check, *popenargs, **kwargs)\u001b[39m\n\u001b[32m    551\u001b[39m     kwargs[\u001b[33m'\u001b[39m\u001b[33mstdout\u001b[39m\u001b[33m'\u001b[39m] = PIPE\n\u001b[32m    552\u001b[39m     kwargs[\u001b[33m'\u001b[39m\u001b[33mstderr\u001b[39m\u001b[33m'\u001b[39m] = PIPE\n\u001b[32m--> \u001b[39m\u001b[32m554\u001b[39m \u001b[38;5;28;01mwith\u001b[39;00m \u001b[30;43mPopen\u001b[39;49m\u001b[30;43m(\u001b[39;49m\u001b[30;43m*\u001b[39;49m\u001b[30;43mpopenargs\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43m*\u001b[39;49m\u001b[30;43m*\u001b[39;49m\u001b[30;43mkwargs\u001b[39;49m\u001b[30;43m)\u001b[39;49m \u001b[38;5;28;01mas\u001b[39;00m process:\n\u001b[32m    555\u001b[39m     \u001b[38;5;28;01mtry\u001b[39;00m:\n\u001b[32m    556\u001b[39m         stdout, stderr = process.communicate(\u001b[38;5;28minput\u001b[39m, timeout=timeout)\n\n\u001b[36mFile \u001b[39m\u001b[32m/usr/lib/python3.13/subprocess.py:1039\u001b[39m, in \u001b[36mPopen.__init__\u001b[39m\u001b[34m(self, args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, user, group, extra_groups, encoding, errors, text, umask, pipesize, process_group)\u001b[39m\n\u001b[32m   1035\u001b[39m         \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;28mself\u001b[39m.text_mode:\n\u001b[32m   1036\u001b[39m             \u001b[38;5;28mself\u001b[39m.stderr = io.TextIOWrapper(\u001b[38;5;28mself\u001b[39m.stderr,\n\u001b[32m   1037\u001b[39m                     encoding=encoding, errors=errors)\n\u001b[32m-> \u001b[39m\u001b[32m1039\u001b[39m     \u001b[30;43mself\u001b[39;49m\u001b[30;43m.\u001b[39;49m\u001b[30;43m_execute_child\u001b[39;49m\u001b[30;43m(\u001b[39;49m\u001b[30;43margs\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mexecutable\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mpreexec_fn\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mclose_fds\u001b[39;49m\u001b[30;43m,\u001b[39;49m\n\u001b[32m   1040\u001b[39m \u001b[30;43m                        \u001b[39;49m\u001b[30;43mpass_fds\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mcwd\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43menv\u001b[39;49m\u001b[30;43m,\u001b[39;49m\n\u001b[32m   1041\u001b[39m \u001b[30;43m                        \u001b[39;49m\u001b[30;43mstartupinfo\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mcreationflags\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mshell\u001b[39;49m\u001b[30;43m,\u001b[39;49m\n\u001b[32m   1042\u001b[39m \u001b[30;43m                        \u001b[39;49m\u001b[30;43mp2cread\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mp2cwrite\u001b[39;49m\u001b[30;43m,\u001b[39;49m\n\u001b[32m   1043\u001b[39m \u001b[30;43m                        \u001b[39;49m\u001b[30;43mc2pread\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mc2pwrite\u001b[39;49m\u001b[30;43m,\u001b[39;49m\n\u001b[32m   1044\u001b[39m \u001b[30;43m                        \u001b[39;49m\u001b[30;43merrread\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43merrwrite\u001b[39;49m\u001b[30;43m,\u001b[39;49m\n\u001b[32m   1045\u001b[39m \u001b[30;43m                        \u001b[39;49m\u001b[30;43mrestore_signals\u001b[39;49m\u001b[30;43m,\u001b[39;49m\n\u001b[32m   1046\u001b[39m \u001b[30;43m                        \u001b[39;49m\u001b[30;43mgid\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mgids\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43muid\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mumask\u001b[39;49m\u001b[30;43m,\u001b[39;49m\n\u001b[32m   1047\u001b[39m \u001b[30;43m                        \u001b[39;49m\u001b[30;43mstart_new_session\u001b[39;49m\u001b[30;43m,\u001b[39;49m\u001b[30;43m \u001b[39;49m\u001b[30;43mprocess_group\u001b[39;49m\u001b[30;43m)\u001b[39;49m\n\u001b[32m   1048\u001b[39m \u001b[38;5;28;01mexcept\u001b[39;00m:\n\u001b[32m   1049\u001b[39m     \u001b[38;5;66;03m# Cleanup if the child failed starting.\u001b[39;00m\n\u001b[32m   1050\u001b[39m     \u001b[38;5;28;01mfor\u001b[39;00m f \u001b[38;5;129;01min\u001b[39;00m \u001b[38;5;28mfilter\u001b[39m(\u001b[38;5;28;01mNone\u001b[39;00m, (\u001b[38;5;28mself\u001b[39m.stdin, \u001b[38;5;28mself\u001b[39m.stdout, \u001b[38;5;28mself\u001b[39m.stderr)):\n\n\u001b[36mFile \u001b[39m\u001b[32m/usr/lib/python3.13/subprocess.py:1991\u001b[39m, in \u001b[36mPopen._execute_child\u001b[39m\u001b[34m(self, args, executable, preexec_fn, close_fds, pass_fds, cwd, env, startupinfo, creationflags, shell, p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite, restore_signals, gid, gids, uid, umask, start_new_session, process_group)\u001b[39m\n\u001b[32m   1989\u001b[39m     err_msg = os.strerror(errno_num)\n\u001b[32m   1990\u001b[39m \u001b[38;5;28;01mif\u001b[39;00m err_filename \u001b[38;5;129;01mis\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m \u001b[38;5;28;01mNone\u001b[39;00m:\n\u001b[32m-> \u001b[39m\u001b[32m1991\u001b[39m     \u001b[38;5;28;01mraise\u001b[39;00m child_exception_type(errno_num, err_msg, err_filename)\n\u001b[32m   1992\u001b[39m \u001b[38;5;28;01melse\u001b[39;00m:\n\u001b[32m   1993\u001b[39m     \u001b[38;5;28;01mraise\u001b[39;00m child_exception_type(errno_num, err_msg)\n\n\u001b[31mFileNotFoundError\u001b[39m: [Errno 2] No such file or directory: 'lm_eval'\n",
+      "seconds": 7.348154544830322
+    },
+    "grpo": {
+      "status": "complete",
+      "signature": "b18970f93695b1ff01fa30e0a1cfa3382412d0826c1e8f9dee8b30f9b80b7c41",
+      "seconds": 5255.076634645462,
+      "artifacts": {
+        "adapters/grpo/grpo_metrics.json": "2170b107e17da6c0af397f824b3f5aed1b62e3efdf61cde23f3ce1c7db45f337",
+        "data/eval/grpo_predictions.json": "39975f01d63f4e9040234c60579e5d2d1e765dfe667b4ab345c82f2ee8236ac2",
+        "notebooks/07_grpo_bonus.ipynb": "e3c5c10f7002c9b9ba5870b1352009f19fecb8739695bd669ed1c84f0a5a4495"
+      }
+    },
+    "sweep": {
+      "status": "complete",
+      "signature": "819795cd5de45570232ffcece3307a219ea2d015a09df1554f628678b4478c05",
+      "seconds": 6105.991738319397,
+      "artifacts": {
+        "adapters/dpo-b0.05/dpo_metrics.json": "4eeb169b756559d088efd26d513e18d0465e294d8e653fe1367477553c245926",
+        "adapters/dpo-b0.10/dpo_metrics.json": "b68430dccb4740b57b88cc0423c05a40f49f2e30f1907e02558f6ba7d3e52ed1",
+        "adapters/dpo-b0.50/dpo_metrics.json": "9539c4d0f55445ccc970b419a72bbd20d21eaaeadc45d80b0b143a1216b059ef"
+      }
+    },
+    "cross": {
+      "status": "complete",
+      "signature": "875fb36bb35e1c073530ecea48bac06fb76924ce02b80b29a134d44b9b9c446c",
+      "seconds": 185.1167163848877,
+      "artifacts": {
+        "data/eval/judge_results_api.json": "792a2b41174fb553ffd8d6d0220bf51cc4c31d5b49dd783278601888591cbabb",
+        "data/eval/judge_summary.json": "83428ecf211fb7156f61c43cd71db7da336380a83332d5765dada937dae56416"
+      }
+    },
+    "hub": {
+      "status": "complete",
+      "signature": "c41bda75495e357e2e0dd06d43b8366f5858af518f4d8c4eff65f847509c7dd0",
+      "seconds": 89.39361333847046,
+      "artifacts": {
+        "data/eval/hub_publish.json": "f7d30f8083b346fc7aec83707e4697937116764cf4c9289f3f207799198a80de"
+      }
+    }
+  }
+}

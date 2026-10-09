@@ -1,0 +1,22 @@
+{
+  "CUDA_VISIBLE_DEVICES": "0",
+  "COMPUTE_TIER": "T4",
+  "MAX_LEN": "768",
+  "SEED": "42",
+  "SFT_SLICE": "1000",
+  "PREF_TRAIN": "800",
+  "PREF_EVAL": "100",
+  "JUDGE_PROMPTS": "80",
+  "DPO_BETA": "0.1",
+  "DPO_LR": "5e-6",
+  "DPO_EPOCHS": "1",
+  "GEN_BATCH_SIZE": "2",
+  "BENCH_BATCH_SIZE": "1",
+  "JUDGE_PROVIDER": "rm",
+  "API_JUDGE_PROVIDER": "openai",
+  "API_JUDGE_MODEL": "gpt-4.1-mini",
+  "HF_REPO": "duckak12/lab22-dpo-vn-experimental",
+  "PUBLISH_HF": "1",
+  "TOKENIZERS_PARALLELISM": "false",
+  "HF_HOME": "/tmp/lab22-hf-cache"
+}

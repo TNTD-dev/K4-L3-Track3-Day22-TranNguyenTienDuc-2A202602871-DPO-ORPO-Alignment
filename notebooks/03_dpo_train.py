@@ -23,6 +23,7 @@
 
 # %%
 import sys
+import time
 from pathlib import Path
 
 ROOT = next(p for p in (Path.cwd(), *Path.cwd().parents) if (p / "lab22" / "config.py").exists())
@@ -76,7 +77,11 @@ trainer = DPOTrainer(
     eval_dataset=eval_ds,
     processing_class=tokenizer,
 )
+torch.cuda.reset_peak_memory_stats()
+started_at = time.perf_counter()
 result = trainer.train()
+train_seconds = time.perf_counter() - started_at
+peak_vram_gb = torch.cuda.max_memory_allocated() / 1024**3
 final_eval = trainer.evaluate()
 print(f"train loss {result.training_loss:.4f} · held-out reward accuracy "
       f"{final_eval.get('eval_rewards/accuracies', float('nan')):.3f}")
@@ -119,6 +124,8 @@ def last(df, col):
 
 
 metrics = {
+    "train_seconds": train_seconds,
+    "peak_vram_gb": peak_vram_gb,
     "compute_tier": C.COMPUTE_TIER,
     "base_model": C.BASE_MODEL,
     "reference": "models/sft-merged (precomputed)",
@@ -139,6 +146,7 @@ metrics = {
     "diagnosis": label,
 }
 (C.DPO_ADAPTER / "dpo_metrics.json").write_text(json.dumps(metrics, indent=2))
+(C.EVAL_DIR / "dpo_history.json").write_text(json.dumps(trainer.state.log_history, indent=2, default=str))
 print(json.dumps(metrics, indent=2))
 
 # %% [markdown]

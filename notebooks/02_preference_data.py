@@ -54,7 +54,9 @@ train_ds, eval_ds = D.load_preference_pairs(
 )
 D.assert_disjoint(list(train_ds), list(eval_ds))
 print(f"train={len(train_ds)}  eval={len(eval_ds)}  (no prompt overlap)")
-print(train_ds[0])
+audit_pairs = list(train_ds.select(range(min(5, len(train_ds)))))
+for i, row in enumerate(audit_pairs, 1):
+    print(f"\nPAIR {i}:\nPROMPT: {row['prompt']}\nCHOSEN: {row['chosen']}\nREJECTED: {row['rejected']}")
 
 # %% [markdown]
 # ## 2. Thiên vị độ dài
@@ -93,6 +95,9 @@ plt.show()
 # %%
 import json
 
+(C.EVAL_DIR / "preference_audit.json").write_text(
+    json.dumps({"pairs": audit_pairs, "length_stats": stats}, ensure_ascii=False, indent=2)
+)
 train_ds.to_parquet(str(C.PREF_DIR / "train.parquet"))
 eval_ds.to_parquet(str(C.PREF_DIR / "eval.parquet"))
 (C.PREF_DIR / "stats.json").write_text(

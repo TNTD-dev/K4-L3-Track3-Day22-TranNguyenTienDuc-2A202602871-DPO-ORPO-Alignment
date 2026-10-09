@@ -7,6 +7,7 @@ patch them; these helpers import lazily for the same reason.
 from __future__ import annotations
 
 import gc
+import os
 from pathlib import Path
 
 from . import config as C
@@ -59,12 +60,15 @@ def generate(
     tokenizer,
     prompts: list[str],
     max_new_tokens: int = C.GEN_MAX_NEW_TOKENS,
-    batch_size: int = 8,
+    batch_size: int | None = None,
 ) -> list[str]:
     """Greedy, batched generation for single-turn user prompts."""
     import torch
     from unsloth import FastLanguageModel
 
+    batch_size = batch_size or int(os.environ.get("GEN_BATCH_SIZE", "2"))
+    if batch_size < 1:
+        raise ValueError("GEN_BATCH_SIZE must be positive")
     FastLanguageModel.for_inference(model)
     old_side = tokenizer.padding_side
     tokenizer.padding_side = "left"

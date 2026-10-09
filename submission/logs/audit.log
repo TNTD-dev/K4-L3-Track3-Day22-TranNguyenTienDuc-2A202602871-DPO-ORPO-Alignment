@@ -1,0 +1,17 @@
+==> Verifying submission at /kaggle/working/lab22-v2
+
+Optional (bonus):
+  ✓ NB3b variants
+  · NB5 GGUF
+  · NB6 benchmark
+  ✓ NB7 GRPO
+  ✓ β-sweep
+
+✗ Submission not ready:
+  - UNEDITED submission/REFLECTION.md header/setup placeholders: ['<Họ Tên>', '<A20-K4 / \\.\\.\\.>', '<YYYY-MM-DD>', '<ví dụ: Colab T4']
+  - UNEDITED submission/REFLECTION.md core sections still have placeholders: §1, §2, §3, §4, §6
+
+Fix the items above and rerun `make verify`. See rubric.md.
+
+Verifier exit: 1 (reflection is intentionally pending)
+RESULTS: /kaggle/working/LAB22_RESULTS.zip (28.2 MB)
